@@ -21,7 +21,7 @@
 
 直接从 GitHub Release 下载最新 `.dmg`：
 
-- [songlairui/volcengine-tokenplan-menubar Releases](https://github.com/songlairui/volcengine-tokenplan-menubar/releases)
+- [lewarh/volcengine-tokenplan-menubar Releases](https://github.com/lewarh/volcengine-tokenplan-menubar/releases)
 
 ### 2. 导入火山引擎请求 cURL
 
