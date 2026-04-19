@@ -1,2 +1,5 @@
 trace/*.log
 trace/*.md
+swift-menubar/.build/
+swift-menubar/.swiftpm/
+.DS_Store
