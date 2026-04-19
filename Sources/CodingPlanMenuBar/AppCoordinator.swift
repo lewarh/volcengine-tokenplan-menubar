@@ -9,11 +9,14 @@ final class AppCoordinator: NSObject {
     private let panel = FloatingPanel()
     private var cancellables = Set<AnyCancellable>()
     private var eventMonitor: Any?
+    private var statusItemTrackingArea: NSTrackingArea?
+    private var workspaceObservers: [NSObjectProtocol] = []
 
     func start() {
         configurePanel()
         configureStatusItem()
         bindPresentation()
+        observeWorkspaceNotifications()
 
         Task {
             await appState.bootstrap()
@@ -37,6 +40,7 @@ final class AppCoordinator: NSObject {
         button.target = self
         button.action = #selector(togglePopover(_:))
         button.imagePosition = .imageLeading
+        installTrackingArea(on: button)
         updateStatusItem(using: appState.menuBarPresentation)
     }
 
@@ -96,6 +100,7 @@ final class AppCoordinator: NSObject {
         positionPanel()
         panel.alphaValue = 1
         panel.makeKeyAndOrderFront(nil)
+        appState.handlePresenceTrigger()
         installEventMonitorIfNeeded()
     }
 
@@ -125,6 +130,21 @@ final class AppCoordinator: NSObject {
         panel.setFrame(frame.integral, display: false)
     }
 
+    private func installTrackingArea(on button: NSStatusBarButton) {
+        if let statusItemTrackingArea {
+            button.removeTrackingArea(statusItemTrackingArea)
+        }
+
+        let trackingArea = NSTrackingArea(
+            rect: button.bounds,
+            options: [.activeAlways, .mouseEnteredAndExited, .inVisibleRect],
+            owner: self,
+            userInfo: nil
+        )
+        button.addTrackingArea(trackingArea)
+        statusItemTrackingArea = trackingArea
+    }
+
     private func installEventMonitorIfNeeded() {
         guard eventMonitor == nil else { return }
 
@@ -139,6 +159,64 @@ final class AppCoordinator: NSObject {
         if let eventMonitor {
             NSEvent.removeMonitor(eventMonitor)
             self.eventMonitor = nil
+        }
+    }
+
+    private func observeWorkspaceNotifications() {
+        let center = NSWorkspace.shared.notificationCenter
+
+        let screensDidSleep = center.addObserver(
+            forName: NSWorkspace.screensDidSleepNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                self?.appState.setRefreshSuspended(true)
+            }
+        }
+
+        let willSleep = center.addObserver(
+            forName: NSWorkspace.willSleepNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                self?.appState.setRefreshSuspended(true)
+            }
+        }
+
+        let screensDidWake = center.addObserver(
+            forName: NSWorkspace.screensDidWakeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                self?.appState.setRefreshSuspended(false)
+            }
+        }
+
+        let didWake = center.addObserver(
+            forName: NSWorkspace.didWakeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                self?.appState.setRefreshSuspended(false)
+            }
+        }
+
+        workspaceObservers = [screensDidSleep, willSleep, screensDidWake, didWake]
+    }
+
+    @objc
+    func mouseEntered(with event: NSEvent) {
+        appState.handlePresenceTrigger()
+    }
+
+    deinit {
+        let center = NSWorkspace.shared.notificationCenter
+        for observer in workspaceObservers {
+            center.removeObserver(observer)
         }
     }
 }

@@ -4,6 +4,7 @@ import SwiftUI
 
 struct MenuBarContentView: View {
     @ObservedObject var appState: AppState
+    @State private var isShowingRefreshHint = false
 
     var body: some View {
         Group {
@@ -172,6 +173,23 @@ struct MenuBarContentView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .disabled(appState.accounts.isEmpty || appState.isRefreshing)
+
+                Button {
+                    isShowingRefreshHint.toggle()
+                } label: {
+                    Image(systemName: "info.circle")
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundStyle(.secondary)
+                }
+                .buttonStyle(.borderless)
+                .help("每 8 分钟自动刷新。打开或悬停菜单栏图标时，30 秒内最多触发一次刷新。")
+                .popover(isPresented: $isShowingRefreshHint, arrowEdge: .bottom) {
+                    Text("每 8 分钟自动刷新。\n打开或悬停菜单栏图标时，30 秒内最多触发一次刷新。")
+                        .font(.caption)
+                        .foregroundStyle(.primary)
+                        .padding(10)
+                        .frame(width: 220, alignment: .leading)
+                }
 
                 Button {
                     appState.openImportPanel()

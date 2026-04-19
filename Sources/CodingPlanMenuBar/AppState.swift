@@ -31,7 +31,10 @@ final class AppState: ObservableObject {
 
     private let store: AccountStore
     private let service: UsageService
+    private let refreshPolicy = RefreshPolicy()
     private var refreshTimer: Timer?
+    private var lastRefreshAt: Date?
+    private var isRefreshSuspended = false
 
     init(store: AccountStore = AccountStore(), service: UsageService = UsageService()) {
         self.store = store
@@ -59,6 +62,24 @@ final class AppState: ObservableObject {
     }
 
     func refresh() async {
+        await refresh(trigger: .manual)
+    }
+
+    func handlePresenceTrigger() {
+        Task { await refresh(trigger: .interactive) }
+    }
+
+    func refresh(trigger: RefreshTrigger) async {
+        let now = Date()
+        guard refreshPolicy.shouldRefresh(
+            lastRefreshAt: lastRefreshAt,
+            now: now,
+            trigger: trigger,
+            isRefreshing: isRefreshing
+        ) else {
+            return
+        }
+
         guard let account = selectedAccount else {
             snapshot = nil
             errorMessage = nil
@@ -68,6 +89,7 @@ final class AppState: ObservableObject {
             return
         }
 
+        lastRefreshAt = now
         isRefreshing = true
         errorMessage = nil
         updatePresentation()
@@ -196,6 +218,10 @@ final class AppState: ObservableObject {
         errorMessage
     }
 
+    func setRefreshSuspended(_ suspended: Bool) {
+        isRefreshSuspended = suspended
+    }
+
     private func reloadAccounts() {
         let loadedAccounts = (try? store.loadAccounts()) ?? []
         let storedSelectedID = (try? store.loadSelectedAccountID()) ?? nil
@@ -211,10 +237,15 @@ final class AppState: ObservableObject {
 
     private func startAutoRefresh() {
         refreshTimer?.invalidate()
-        refreshTimer = Timer.scheduledTimer(withTimeInterval: 300, repeats: true) { [weak self] _ in
-            guard let self else { return }
-            Task { await self.refresh() }
+        let timer = Timer(timeInterval: refreshPolicy.periodicInterval, repeats: true) { [weak self] _ in
+            Task { @MainActor in
+                guard let self else { return }
+                guard !self.isRefreshSuspended else { return }
+                await self.refresh(trigger: .periodic)
+            }
         }
+        RunLoop.main.add(timer, forMode: .common)
+        refreshTimer = timer
     }
 
     private func updatePresentation() {
