@@ -48,6 +48,76 @@ codex exec \
 - 默认自行做产品判断，把 menubar 工具打磨到可直接使用的程度。"
 ```
 
+## 必须补充给 Agent 的接口上下文
+
+如果要让 agent 真正把应用做出来，除了上面的目标描述，还必须把下面这些火山引擎上下文写进提示词里。否则它只能停留在猜测层面：
+
+### 1) 用户进入页面的来源地址
+
+- 火山控制台订阅页：
+  - `https://console.volcengine.com/ark/region:ark+cn-beijing/openManagement?advancedActiveKey=subscribe`
+- 导入 cURL 时，应明确要求用户从浏览器开发者工具的 Network 面板中，找到 `GetCodingPlanUsage` 请求，并执行 “Copy as cURL”。
+
+### 2) 实际调用的接口地址
+
+- 用量查询接口：
+  - `https://console.volcengine.com/api/top/ark/cn-beijing/2024-01-01/GetCodingPlanUsage`
+- 请求方法：
+  - `POST`
+- 请求体：
+  - 空 JSON，也就是 `{}`。
+
+### 3) 发请求必须满足的关键要求
+
+至少要在任务描述里明确这些点：
+
+- `content-type` 必须是 `application/json`
+- `origin` 必须是 `https://console.volcengine.com`
+- `referer` 必须指向火山控制台订阅页对应的 `openManagement` 页面
+- 请求头 `x-csrf-token` 必须存在
+- Cookie 中必须包含：
+  - `connect.sid`
+  - `digest`
+  - `csrfToken`
+- 且 **请求头里的 `x-csrf-token` 必须和 Cookie 里的 `csrfToken` 完全一致**
+
+### 4) cURL 导入时必须解析的关键字段
+
+任务描述里要明确告诉 agent：
+
+- 从 cURL 的 Cookie 中提取：
+  - `connect.sid`
+  - `digest`
+  - `csrfToken`
+- 如果 Cookie 里没有 `csrfToken`，允许从请求头 `x-csrf-token` 中补取
+- `digest` 是 JWT，可从中解析出用户名和过期时间
+- 用户名应优先从 `digest` 的 payload 中恢复，不要求用户手填
+
+### 5) 鉴权与错误处理的最小规则
+
+这些规则也建议放进任务描述：
+
+- 401 / 403：视为认证失效，需要重新导入 cURL
+- 429：视为请求频率过高，应提示稍后重试
+- 5xx：视为服务端错误，应提示稍后重试
+- 如果本地没有导入数据，不应显示“错误”，而应进入导入态
+
+### 6) 推荐加入原始开发指令中的增强版段落
+
+你可以把下面这段自然语言直接拼进上面的 `codex exec` 提示词里：
+
+```text
+补充接口上下文：
+- 用户获取 cURL 的页面是 https://console.volcengine.com/ark/region:ark+cn-beijing/openManagement?advancedActiveKey=subscribe
+- 实际查询接口是 https://console.volcengine.com/api/top/ark/cn-beijing/2024-01-01/GetCodingPlanUsage
+- 请求方法为 POST，请求体为 {}
+- 必须带 content-type: application/json、origin: https://console.volcengine.com、referer 指向 openManagement 页面
+- 必须带 x-csrf-token，请确保它与 Cookie 中的 csrfToken 完全一致
+- 必须从 cURL 中解析 connect.sid、digest、csrfToken
+- digest 是 JWT，可用于恢复用户名和凭证过期时间
+- 401/403 视为需要重新导入，429 视为请求过频，5xx 视为服务端错误
+```
+
 ## 使用建议
 
 - 把 `/ABSOLUTE/PATH/TO/PROJECT` 替换成你的项目绝对路径。
