@@ -26,6 +26,17 @@
 
 - [lewarh/volcengine-tokenplan-menubar Releases](https://github.com/lewarh/volcengine-tokenplan-menubar/releases)
 
+如果直接打开 `.dmg` 安装后的应用被 macOS 阻止，可能需要执行：
+
+```bash
+sudo xattr -rd com.apple.quarantine /Applications/火山Code订阅用量.app
+```
+
+也可以在系统设置中手动放行：
+
+- 打开“系统设置” → “隐私与安全性”
+- 在安全提示区域允许 `火山Code订阅用量.app` 继续打开
+
 ### 2. 导入火山引擎请求 cURL
 
 1. 打开火山引擎控制台：
