@@ -3,8 +3,6 @@
 一个只做一件事的 macOS 菜单栏应用：  
 直接在 menubar 查看火山引擎 TokenPlan / CodingPlan 的用量。
 
-![预览](assets/preview-usage-volc.png)
-
 ## 功能
 
 - menubar 直接显示 5 小时限制的剩余百分比
@@ -19,7 +17,13 @@
 
 ## 使用方式
 
-### 1. 获取 cURL
+### 1. 下载 Release
+
+直接从 GitHub Release 下载最新 `.dmg`：
+
+- [songlairui/volcengine-tokenplan-menubar Releases](https://github.com/songlairui/volcengine-tokenplan-menubar/releases)
+
+### 2. 导入火山引擎请求 cURL
 
 1. 打开火山引擎控制台：
    - `https://console.volcengine.com/ark/region:ark+cn-beijing/openManagement?advancedActiveKey=subscribe`
@@ -30,19 +34,33 @@
    - `Copy as cURL (bash)`
 5. 回到应用，进入导入界面，直接粘贴即可
 
-### 2. 本地运行
+## 预览截图
+
+![预览](assets/preview-usage-volc.png)
+
+## Development
+
+- 产品 / 交互 / 实现取向参考：`VIBE_REFERENCE.md`
+
+## 本项目的本地开发（给 LLM Agent 看）
+
+- 人类不需要看这一节；直接在仓库目录下告诉 Agent 要做什么即可
+- 本项目是 Swift Package Manager 的 macOS menubar app
+- 常用命令如下
+
+### 本地运行
 
 ```bash
 make run
 ```
 
-### 3. 构建
+### 构建
 
 ```bash
 make build
 ```
 
-### 4. 打包 `.app` 和 `.dmg`
+### 打包 `.app` 和 `.dmg`
 
 ```bash
 make dmg
@@ -52,22 +70,3 @@ make dmg
 
 - `dist/火山Code订阅用量.app`
 - `dist/Volcengine-TokenPlan-Menubar.dmg`
-
-### 5. 从 Release 下载
-
-如果不想本地构建，可以直接从 GitHub Release 下载 DMG。
-
-## Release
-
-仓库的 GitHub Release 会附带 `.dmg` 安装包。
-
-- 推送 `v*` tag 后，GitHub Actions 会自动构建并上传 DMG
-- 当前 release workflow 位于：
-  - `.github/workflows/release-dmg.yml`
-
-## 开发
-
-- Swift Package Manager
-- macOS 原生 menubar 应用
-- 参考开发指令：
-  - `VIBE_REFERENCE.md`
