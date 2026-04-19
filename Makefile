@@ -1,4 +1,4 @@
-APP_NAME := Volcengine TokenPlan Menubar
+APP_NAME := 火山Code订阅用量
 
 .PHONY: build run package-app dmg clean
 

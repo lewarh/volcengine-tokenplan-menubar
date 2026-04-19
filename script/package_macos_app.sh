@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DIST_DIR="$ROOT_DIR/dist"
-APP_NAME="Volcengine TokenPlan Menubar"
+APP_NAME="火山Code订阅用量"
 PRODUCT_NAME="CodingPlanMenuBar"
 BUNDLE_EXECUTABLE="VolcengineTokenPlanMenubar"
 BUNDLE_ID="com.songlairui.volcengine-tokenplan-menubar"

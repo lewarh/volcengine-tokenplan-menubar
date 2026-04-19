@@ -1,7 +1,9 @@
-# Volcengine TokenPlan Menubar
+# 火山Code订阅用量
 
 一个只做一件事的 macOS 菜单栏应用：  
 直接在 menubar 查看火山引擎 TokenPlan / CodingPlan 的用量。
+
+![预览](assets/preview-usage-volc.png)
 
 ## 功能
 
@@ -48,8 +50,12 @@ make dmg
 
 生成产物：
 
-- `dist/Volcengine TokenPlan Menubar.app`
+- `dist/火山Code订阅用量.app`
 - `dist/Volcengine-TokenPlan-Menubar.dmg`
+
+### 5. 从 Release 下载
+
+如果不想本地构建，可以直接从 GitHub Release 下载 DMG。
 
 ## Release
 
