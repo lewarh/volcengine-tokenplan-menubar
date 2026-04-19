@@ -170,7 +170,7 @@ final class AppCoordinator: NSObject {
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            Task { @MainActor in
+            Task { @MainActor [weak self] in
                 self?.appState.setRefreshSuspended(true)
             }
         }
@@ -180,7 +180,7 @@ final class AppCoordinator: NSObject {
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            Task { @MainActor in
+            Task { @MainActor [weak self] in
                 self?.appState.setRefreshSuspended(true)
             }
         }
@@ -190,7 +190,7 @@ final class AppCoordinator: NSObject {
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            Task { @MainActor in
+            Task { @MainActor [weak self] in
                 self?.appState.setRefreshSuspended(false)
             }
         }
@@ -200,7 +200,7 @@ final class AppCoordinator: NSObject {
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            Task { @MainActor in
+            Task { @MainActor [weak self] in
                 self?.appState.setRefreshSuspended(false)
             }
         }

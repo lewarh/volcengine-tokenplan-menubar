@@ -238,7 +238,7 @@ final class AppState: ObservableObject {
     private func startAutoRefresh() {
         refreshTimer?.invalidate()
         let timer = Timer(timeInterval: refreshPolicy.periodicInterval, repeats: true) { [weak self] _ in
-            Task { @MainActor in
+            Task { @MainActor [weak self] in
                 guard let self else { return }
                 guard !self.isRefreshSuspended else { return }
                 await self.refresh(trigger: .periodic)
