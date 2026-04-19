@@ -1,6 +1,6 @@
-# CodingPlan MenuBar
+# Volcengine TokenPlan Menubar
 
-一个基于 SwiftPM 的 macOS 菜单栏应用，直接在菜单栏查看火山引擎 CodingPlan 用量。
+一个基于 SwiftPM 的 macOS 菜单栏应用，直接在菜单栏查看火山引擎 TokenPlan / CodingPlan 用量。
 
 ## 交互设计
 
@@ -23,9 +23,21 @@
 ## 运行
 
 ```bash
-cd /Users/larysong/repo/coding-plan-usage/swift-menubar
-swift run CodingPlanMenuBar
+cd /Users/larysong/repo/coding-plan-usage
+make run
 ```
+
+## 打包 DMG
+
+```bash
+cd /Users/larysong/repo/coding-plan-usage
+make dmg
+```
+
+产物位于：
+
+- `dist/Volcengine TokenPlan Menubar.app`
+- `dist/Volcengine-TokenPlan-Menubar.dmg`
 
 ## 获取 cURL
 

@@ -1,4 +1,6 @@
-# Token Plan Usage 用量查询与管理工具
+# Volcengine TokenPlan Menubar
+
+一个只聚焦于火山引擎 TokenPlan / CodingPlan 用量查看的 macOS 菜单栏应用。
 
 ## 当前子项目
 
