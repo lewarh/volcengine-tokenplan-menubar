@@ -1,7 +1,10 @@
 # 火山Code订阅用量
 
-一个只做一件事的 macOS 菜单栏应用：  
 直接在 menubar 查看火山引擎 TokenPlan / CodingPlan 的用量。
+
+## Vibe 参考
+
+- 用 LLM Agent 从零复刻或继续迭代时，先看：[VIBE_REFERENCE.md](VIBE_REFERENCE.md)
 
 ## 功能
 
@@ -37,10 +40,6 @@
 ## 预览截图
 
 ![预览](assets/preview-usage-volc.png)
-
-## Development
-
-- 产品 / 交互 / 实现取向参考：`VIBE_REFERENCE.md`
 
 ## 本项目的本地开发（给 LLM Agent 看）
 
