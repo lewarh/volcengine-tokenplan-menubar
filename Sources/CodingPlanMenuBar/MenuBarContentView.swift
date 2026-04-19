@@ -140,11 +140,8 @@ struct MenuBarContentView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
-                .padding(14)
-                .background(
-                    RoundedRectangle(cornerRadius: 14)
-                        .fill(Color(NSColor.controlBackgroundColor))
-                )
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
             }
         }
         .fixedSize(horizontal: false, vertical: true)
@@ -339,10 +336,6 @@ private struct CompactQuotaRow: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 6)
-        .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(Color(NSColor.controlBackgroundColor))
-        )
     }
 
     private var progressColor: Color {
