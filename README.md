@@ -1,66 +1,67 @@
 # Volcengine TokenPlan Menubar
 
-一个只聚焦于火山引擎 TokenPlan / CodingPlan 用量查看的 macOS 菜单栏应用。
+一个只做一件事的 macOS 菜单栏应用：  
+直接在 menubar 查看火山引擎 TokenPlan / CodingPlan 的用量。
 
-## 当前子项目
+## 功能
 
-- `swift-menubar/`：macOS 菜单栏原生应用（当前主线）
-- `go-cobra/`：Go + Cobra 方案预留目录
+- menubar 直接显示 5 小时限制的剩余百分比
+- 点击后查看三档配额：
+  - 5 小时限制
+  - 周限制
+  - 总量
+- 支持手动刷新
+- 支持重新导入 cURL
+- 支持删除已导入账号数据
+- 仅使用本地私有文件保存导入信息，不走 Keychain 弹窗
 
-## 项目概述
-一个帮助开发者管理多个AI服务订阅用量的工具，提供实时用量查询、使用分析和智能建议，避免用量同时耗尽，最大化订阅价值。
+## 使用方式
 
-## 核心功能
-### 📊 用量查询与展示
-- 多平台统一查询（火山CodingPlan、ChatGPT、Claude等）
-- 实时用量进度展示
-- 状态栏/桌面悬浮窗显示
-- 多账号/多订阅统一管理
+### 1. 获取 cURL
 
-### ⚡ 用量激活
-- 手动触发用量更新请求
-- idle状态检测与自动激活提醒
-- 支持定时刷新配置
+1. 打开火山引擎控制台：
+   - `https://console.volcengine.com/ark/region:ark+cn-beijing/openManagement?advancedActiveKey=subscribe`
+2. 打开浏览器开发者工具
+3. 在 `Network` 中搜索：
+   - `GetCodingPlanUsage`
+4. 找到该请求后，复制它的：
+   - `Copy as cURL (bash)`
+5. 回到应用，进入导入界面，直接粘贴即可
 
-### 🧠 智能分析与建议
-- 用量使用率计算（支持5小时限制、周限制等复杂规则）
-- 订阅周期内使用策略建议
-- 用量耗尽预警
-- 最优切换时机推荐
+### 2. 本地运行
 
-## 技术选型
-- **后端/CLI**: Go (跨平台、高性能)
-- **前端UI**: 可选Tauri/Wails (桌面端) 或纯CLI
-- **数据存储**: SQLite (轻量级、无需额外服务)
-- **状态展示**: 支持菜单栏/状态栏集成 (macOS: MenuBar Extra, Windows: 系统托盘)
+```bash
+make run
+```
 
-## 开发路线
-### Phase 1: 基础查询能力 (当前阶段: SPEC)
-- [ ] 火山CodingPlan接口分析与授权方式调研
-- [ ] 基础查询功能实现
-- [ ] 命令行查询输出
-- [ ] 配置文件管理多账号信息
+### 3. 构建
 
-### Phase 2: 用量激活与管理
-- [ ] 手动触发用量更新功能
-- [ ] 多订阅统一管理
-- [ ] 用量数据持久化
-- [ ] 使用历史记录
+```bash
+make build
+```
 
-### Phase 3: 智能分析与建议
-- [ ] 复杂用量规则解析 (5h限、week限等)
-- [ ] 使用率计算与预测
-- [ ] 智能使用建议生成
-- [ ] 用量耗尽预警
+### 4. 打包 `.app` 和 `.dmg`
 
-### Phase 4: UI展示与集成
-- [ ] 状态栏/系统托盘集成
-- [ ] 桌面悬浮窗可选
-- [ ] 可视化用量 dashboard
-- [ ] 跨平台支持 (macOS/Windows/Linux)
+```bash
+make dmg
+```
 
-### Phase 5: 多平台扩展
-- [ ] ChatGPT订阅支持
-- [ ] Claude订阅支持
-- [ ] 其他AI服务接入
-- [ ] 插件化扩展架构
+生成产物：
+
+- `dist/Volcengine TokenPlan Menubar.app`
+- `dist/Volcengine-TokenPlan-Menubar.dmg`
+
+## Release
+
+仓库的 GitHub Release 会附带 `.dmg` 安装包。
+
+- 推送 `v*` tag 后，GitHub Actions 会自动构建并上传 DMG
+- 当前 release workflow 位于：
+  - `.github/workflows/release-dmg.yml`
+
+## 开发
+
+- Swift Package Manager
+- macOS 原生 menubar 应用
+- 参考开发指令：
+  - `VIBE_REFERENCE.md`

@@ -2,7 +2,6 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SWIFT_DIR="$ROOT_DIR/swift-menubar"
 DIST_DIR="$ROOT_DIR/dist"
 APP_NAME="Volcengine TokenPlan Menubar"
 PRODUCT_NAME="CodingPlanMenuBar"
@@ -12,7 +11,7 @@ APP_BUNDLE="$DIST_DIR/$APP_NAME.app"
 
 mkdir -p "$DIST_DIR"
 
-pushd "$SWIFT_DIR" >/dev/null
+pushd "$ROOT_DIR" >/dev/null
 swift build -c release --product "$PRODUCT_NAME"
 BUILD_DIR="$(swift build -c release --show-bin-path)"
 popd >/dev/null

@@ -1,6 +1,4 @@
-trace/*.log
-trace/*.md
-swift-menubar/.build/
-swift-menubar/.swiftpm/
+.build/
+.swiftpm/
 .DS_Store
 dist/

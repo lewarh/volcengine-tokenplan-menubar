@@ -1,6 +1,6 @@
-# Menubar 开发指令
+# Vibe 参考
 
-下面这条命令参考了 `voice-input-src` README 的风格，适合在一个全新的目录或现有仓库里，直接驱动 Codex 从 0 到 1 完成一个 macOS menubar 应用的开发。
+下面这条命令参考了 `voice-input-src` README 的风格，适合直接驱动 Codex 完成一个 macOS menubar 应用的开发。
 
 特点：
 
