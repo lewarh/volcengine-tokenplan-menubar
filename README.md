@@ -26,7 +26,13 @@
 
 - [lewarh/volcengine-tokenplan-menubar Releases](https://github.com/lewarh/volcengine-tokenplan-menubar/releases)
 
-如果直接打开 `.dmg` 安装后的应用被 macOS 阻止，可能需要执行：
+如果 `.dmg` 本身打不开，先执行：
+
+```bash
+xattr -rd com.apple.quarantine ~/Downloads/Volcengine-TokenPlan-Menubar.dmg
+```
+
+安装到 `/Applications` 之后，如果应用本身仍被 macOS 阻止，再执行：
 
 ```bash
 sudo xattr -rd com.apple.quarantine /Applications/火山Code订阅用量.app
@@ -36,6 +42,11 @@ sudo xattr -rd com.apple.quarantine /Applications/火山Code订阅用量.app
 
 - 打开“系统设置” → “隐私与安全性”
 - 在安全提示区域允许 `火山Code订阅用量.app` 继续打开
+
+说明：
+
+- 当前 release 还没有做 Apple Developer ID 签名与 notarization
+- 所以 Gatekeeper 可能把“未公证”表现成“已损坏”
 
 ### 2. 导入火山引擎请求 cURL
 
